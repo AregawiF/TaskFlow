@@ -19,12 +19,12 @@ const createTask = asyncHandler(async (req, res) => {
     throw new Error("Project not found");
   }
 
-  // Check if the user exists (for assignment)
-  if (assignedTo) {
-    const user = await User.findById(assignedTo);
-    if (!user) {
+  // Check if the users exist (if assignedTo is provided)
+  if (assignedTo && Array.isArray(assignedTo)) {
+    const users = await User.find({ '_id': { $in: assignedTo } });
+    if (users.length !== assignedTo.length) {
       res.status(404);
-      throw new Error("User not found");
+      throw new Error("One or more users not found");
     }
   }
 
@@ -33,7 +33,7 @@ const createTask = asyncHandler(async (req, res) => {
     title,
     description,
     project: projectId,
-    assignedTo,
+    assignedTo: assignedTo || [],  // If no users provided, it will be an empty array
     deadline,
     priority,
   });
@@ -46,4 +46,41 @@ const createTask = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { createTask };
+
+const assignUsersToTask = asyncHandler(async (req, res) => {
+  const { taskId, users } = req.body;  // Task ID and array of user IDs
+
+  // Validate input
+  if (!taskId || !users || !Array.isArray(users)) {
+    res.status(400);
+    throw new Error("Please provide a valid task ID and an array of user IDs");
+  }
+
+  // Check if the task exists
+  const task = await Task.findById(taskId);
+  if (!task) {
+    res.status(404);
+    throw new Error("Task not found");
+  }
+
+  // Check if the users exist
+  const foundUsers = await User.find({ '_id': { $in: users } });
+  if (foundUsers.length !== users.length) {
+    res.status(404);
+    throw new Error("One or more users not found");
+  }
+
+  // Assign the users to the task
+  task.assignedTo.push(...users);  // Add users to the existing assignedTo array (if not already assigned)
+  
+  await task.save();
+  
+  res.status(200).json({
+    message: "Users assigned to task successfully",
+    task,
+  });
+});
+
+
+
+module.exports = { createTask, assignUsersToTask };
