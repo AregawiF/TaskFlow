@@ -9,3 +9,5 @@ const IssueSchema = new mongoose.Schema({
 });
 
 const Issue = mongoose.model("Issue", IssueSchema);
+
+module.exports = Issue;
