@@ -1,2 +1,2 @@
 # TaskFlow
-a task management system with the MERN
+TaskFlow is a MERN-based task management system.
