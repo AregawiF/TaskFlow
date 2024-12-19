@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
+const projectRoutes = require("./routes/projectRoutes");
 
 
 dotenv.config();
@@ -21,6 +22,8 @@ app.use(express.json());
 
 // Define routes (import from `routes/` folder)
 app.use("/api/users", userRoutes);
+app.use("/api/projects", projectRoutes); // Mount project-related routes
+
 
 // error handling
 app.use((err, req, res, next) => {
