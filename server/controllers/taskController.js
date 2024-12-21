@@ -70,8 +70,16 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
     throw new Error("One or more users not found");
   }
 
+  // Filter out users already assigned to the task
+  const uniqueUsersToAdd = users.filter((userId) => !task.assignedTo.includes(userId));
+
+  if (uniqueUsersToAdd.length === 0) {
+    res.status(400);
+    throw new Error("All provided users are already assigned to this task");
+  }
+
   // Assign the users to the task
-  task.assignedTo.push(...users);  // Add users to the existing assignedTo array (if not already assigned)
+  task.assignedTo.push(...uniqueUsersToAdd);  // Add users to the existing assignedTo array (if not already assigned)
   
   await task.save();
   

@@ -16,6 +16,14 @@ const TaskSchema = new mongoose.Schema({
       status: { type: String, enum: ["pending", "completed"], default: "pending" },
     },
   ],
+  issues: [
+    {
+      description: { type: String, required: true },
+      reportedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+      status: { type: String, enum: ["open", "resolved"], default: "open" },
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 
