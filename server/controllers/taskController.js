@@ -90,5 +90,37 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
 });
 
 
+// Adjust work schedule (deadline/priority)
+const adjustWorkSchedule = asyncHandler(async (req, res) => {
+  const { taskId } = req.params;
+  const { deadline, priority } = req.body;
 
-module.exports = { createTask, assignUsersToTask };
+  // Find the task
+  const task = await Task.findById(taskId);
+
+  if (!task) {
+    res.status(404);
+    throw new Error("Task not found");
+  }
+
+  // Only allow owners or the user who created the task to modify it
+  if (req.user.role !== "owner" && task.createdBy.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error("Not authorized to adjust this task");
+  }
+
+  // Update the task
+  if (deadline) task.deadline = new Date(deadline);
+  if (priority) task.priority = priority;
+
+  const updatedTask = await task.save();
+
+  res.status(200).json({
+    message: "Work schedule adjusted successfully",
+    task: updatedTask,
+  });
+});
+
+
+
+module.exports = { createTask, assignUsersToTask, adjustWorkSchedule };
