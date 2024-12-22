@@ -22,4 +22,21 @@ const createProject = async (req, res) => {
   }
 };
 
-module.exports = { createProject };
+const getAllProjects = async (req, res) => {
+  try {
+    // Fetch all projects belonging to the authenticated user
+    const projects = await Project.find({ owner: req.user.id });
+
+    res.status(200).json({
+      message: "Projects fetched successfully",
+      projects,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { createProject, getAllProjects };

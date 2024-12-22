@@ -8,9 +8,9 @@ const { adjustWorkSchedule } = require("../controllers/taskController");
 // Protect the route with both protect and authorize middlewares
 router.post("/create", protect, authorize(['owner', 'team-member']), createTask);
 
-router.put("/assign-users", protect, assignUsersToTask); // PUT request to assign users
+router.put("/assign-users", protect, authorize(['owner']), assignUsersToTask); // PUT request to assign users
 
-router.patch("/:taskId/schedule", protect, adjustWorkSchedule); // PATCH request to adjust work schedule
+router.patch("/:taskId/schedule", protect, authorize(['owner']), adjustWorkSchedule); // PATCH request to adjust work schedule
 
 module.exports = router;
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Projects from './pages/owner/Projects';
+import Projects from './pages/owner/OwnerProjects';
 import Profile from './pages/owner/Profile';
 import { newtonsCradle } from 'ldrs'
 
