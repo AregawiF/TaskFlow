@@ -1,5 +1,7 @@
+import { useState } from "react";
 import Project from "../../components/Project";
 import { useGetProjectsQuery } from "../../services/projectApi";
+import CreateProject from "../../components/CreateProject";
 
 interface ProjectProps {
   _id: string;
@@ -7,14 +9,17 @@ interface ProjectProps {
   description: string;
   owner: string;
   status: string;
-  tasks: string[];
+  tasks: any[];
   teamMembers: string[];
   createdAt: string;
 }
 
 const Projects = () => {
 
-  const { data, isLoading, isError, error } = useGetProjectsQuery([]);
+  const { data, isLoading, isError, error, refetch } = useGetProjectsQuery([]);
+
+  const [isCreating, setIsCreating] = useState(false); // State to manage visibility of CreateProject form
+
 
   if (isLoading) return <p>Loading projects...</p>;
   if (error){
@@ -45,7 +50,15 @@ const Projects = () => {
           createdAt={project.createdAt} 
           />
         ))}
-      <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Create New Project</button>
+      <button 
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded" 
+          onClick={() => setIsCreating(!isCreating)}
+        >
+          {isCreating ? 'Cancel' : 'Create New Project'}
+        </button>
+
+        {/* Conditional rendering of CreateProject form */}
+        {isCreating && <CreateProject refetch={refetch} />}
       </div>
     </div>
   )

@@ -20,7 +20,14 @@ export const projectsApi = createApi({
     getProjects: builder.query({
       query: () => '/', // This will send a GET request to the base URL
     }),
+    createProject: builder.mutation({
+        query: (newProject) => ({
+          url: '/create',
+          method: 'POST',
+          body: newProject,
+        }),
+      }),
   }),
 });
 
-export const { useGetProjectsQuery } = projectsApi;
+export const { useGetProjectsQuery, useCreateProjectMutation} = projectsApi;

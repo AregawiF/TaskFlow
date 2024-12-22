@@ -13,6 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 import OwnerOverview from './pages/owner/OwnerOverview';
 import Members from './pages/owner/Members';
 import MemberOverview from './pages/member/MemberOverview';
+import ProjectDetail from './components/ProjectDetail';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -64,6 +65,7 @@ const App: React.FC = () => {
             <Route path="/dashboard" element={<OwnerOverview />} />
             <Route path="/members" element={<Members />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/project/:projectId" element={<ProjectDetail />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
         ) : role === "member" ? (
