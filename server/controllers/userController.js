@@ -64,7 +64,7 @@ const loginUser = asyncHandler(async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
-      token: generateToken(user._id),
+      token: generateToken(user),
     });
   } else {
     res.status(401);
@@ -86,8 +86,12 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // Generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+const generateToken = (user) => {
+  const payload = {
+    userId: user._id,
+    role: user.role,  // Include role in the token
+  };
+  return jwt.sign({ payload }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
 module.exports = { registerUser, loginUser, getUserProfile };
