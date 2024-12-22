@@ -92,7 +92,6 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
 });
 
 
-// Adjust work schedule (deadline/priority)
 const adjustWorkSchedule = asyncHandler(async (req, res) => {
   const { taskId } = req.params;
   const { deadline, priority } = req.body;
@@ -112,8 +111,12 @@ const adjustWorkSchedule = asyncHandler(async (req, res) => {
   }
 
   // Update the task
-  if (deadline) task.deadline = new Date(deadline);
-  if (priority) task.priority = priority;
+  if (deadline) {
+    task.deadline = new Date(deadline); // Update deadline if provided
+  }
+  if (priority) {
+    task.priority = priority; // Update priority if provided
+  }
 
   const updatedTask = await task.save();
 

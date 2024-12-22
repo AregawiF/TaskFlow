@@ -37,8 +37,34 @@ export const taskApi = createApi({
         body: { taskId, users },
       }),
     }),
+    addIssue: builder.mutation({
+      query: ({ taskId, description }) => ({
+        url: `/${taskId}/issues`,
+        method: 'POST',
+        body: { description },
+      }),
+    }),
+    getTaskIssues: builder.query({
+      query: (taskId) => `/${taskId}/issues`, // Assuming the endpoint to get issues is /:taskId/issues
+    }),
+    updateIssue: builder.mutation({
+      query: ({ taskId, issueId, status }) => ({
+        url: `/${taskId}/issues/${issueId}`,
+        method: 'PUT',
+        body: { status },
+      }),
+    }),
+
 
   }),
 });
 
-export const { useCreateTaskMutation, useGetTaskQuery, useMarkTaskAsDoneMutation, useAssignUsersToTaskMutation } = taskApi;
+export const { 
+    useCreateTaskMutation, 
+    useGetTaskQuery, 
+    useMarkTaskAsDoneMutation, 
+    useAssignUsersToTaskMutation, 
+    useAddIssueMutation, 
+    useGetTaskIssuesQuery, 
+    useUpdateIssueMutation
+} = taskApi;
