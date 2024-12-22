@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useGetTaskQuery, useMarkTaskAsDoneMutation, useAssignUsersToTaskMutation } from "../services/taskApi"; // Import the query and mutation hooks
+import { useGetTaskQuery, useMarkTaskAsDoneMutation, useAssignUsersToTaskMutation, useAdjustWorkScheduleMutation } from "../services/taskApi"; // Import the query and mutation hooks
 import Issues from "./Issue";
 
 interface TaskProps {
@@ -11,8 +11,11 @@ const Task: React.FC<TaskProps> = ({ taskId }) => {
   const { data: task, isLoading, isError, error, refetch } = useGetTaskQuery(taskId); // Fetch task details
   const [markTaskAsDone] = useMarkTaskAsDoneMutation(); // Mutation for marking task as done
   const [assignUsers] = useAssignUsersToTaskMutation(); // Mutation for assigning users
+  const [adjustWorkSchedule] = useAdjustWorkScheduleMutation(); // Mutation for adjusting work schedule
   const [usersToAssign, setUsersToAssign] = useState<string[]>([]); // State for user IDs to assign
   const [isDone, setIsDone] = useState(false); // State to track if the task is marked as done
+  const [newDeadline, setNewDeadline] = useState<string>(""); // State for new deadline
+  
 
   const handleMarkAsDone = async () => {
     try {
@@ -32,6 +35,16 @@ const Task: React.FC<TaskProps> = ({ taskId }) => {
       refetch(); // Refetch task data to update UI
     } catch (error) {
       console.error("Failed to assign users:", error);
+    }
+  };
+
+  const handleExtendDeadline = async () => {
+    try {
+      await adjustWorkSchedule({ taskId, deadline: newDeadline }).unwrap(); // Call the adjust work schedule mutation
+      alert("Deadline extended successfully!");
+      refetch(); // Refetch task data to update UI
+    } catch (error) {
+      console.error("Failed to extend deadline:", error);
     }
   };
 
@@ -80,6 +93,22 @@ const Task: React.FC<TaskProps> = ({ taskId }) => {
 
 
       <Issues taskId={taskId} />
+
+      {/* Input for extending deadline */}
+      <div className="mt-4">
+        <input 
+          type="datetime-local" 
+          value={newDeadline}
+          onChange={(e) => setNewDeadline(e.target.value)}
+          className="border border-gray-300 rounded p-2 w-full"
+        />
+        <button 
+          className="mt-2 bg-yellow-500 text-white px-4 py-2 rounded" 
+          onClick={handleExtendDeadline}
+        >
+          Extend Task Deadline
+        </button>
+      </div>
     </div>
   );
 };

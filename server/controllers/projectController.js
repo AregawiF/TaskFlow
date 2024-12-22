@@ -1,4 +1,5 @@
 const Project = require("../models/Project");
+const asyncHandler = require("express-async-handler");
 
 const createProject = async (req, res) => {
   try {
@@ -39,4 +40,32 @@ const getAllProjects = async (req, res) => {
   }
 };
 
-module.exports = { createProject, getAllProjects };
+
+const adjustProjectDeadline = asyncHandler(async (req, res) => {
+  const { projectId } = req.params; // Get the project ID from the request parameters
+  const { deadline } = req.body; // Get the new deadline from the request body
+
+  // Validate input
+  if (!projectId || !deadline) {
+    res.status(400);
+    throw new Error("Please provide a valid project ID and a new deadline");
+  }
+
+  // Check if the project exists
+  const project = await Project.findById(projectId);
+  if (!project) {
+    res.status(404);
+    throw new Error("Project not found");
+  }
+
+  // Update the project deadline
+  project.deadline = new Date(deadline); // Update the deadline
+  await project.save();
+
+  res.status(200).json({
+    message: "Project deadline updated successfully",
+    project,
+  });
+});
+
+module.exports = { createProject, getAllProjects, adjustProjectDeadline };

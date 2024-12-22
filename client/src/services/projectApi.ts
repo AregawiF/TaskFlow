@@ -27,7 +27,18 @@ export const projectsApi = createApi({
           body: newProject,
         }),
       }),
+
+    adjustProjectDeadline: builder.mutation({
+      query: ({ projectId, deadline }) => ({
+        url: `/${projectId}/adjust-deadline`,
+        method: 'PUT',
+        body: { deadline },
+      }),
+    }),
+
+
+
   }),
 });
 
-export const { useGetProjectsQuery, useCreateProjectMutation} = projectsApi;
+export const { useGetProjectsQuery, useCreateProjectMutation, useAdjustProjectDeadlineMutation } = projectsApi;

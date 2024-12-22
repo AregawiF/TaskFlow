@@ -7,6 +7,7 @@ const ProjectSchema = new mongoose.Schema({
   teamMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Assigned team members
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],              // Related tasks
   status: { type: String, enum: ["ongoing", "completed", "on-hold"], default: "ongoing" },
+  deadline: { type: Date },
   createdAt: { type: Date, default: Date.now },
   deadline: { type: Date },
 });

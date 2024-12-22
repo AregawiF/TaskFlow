@@ -10,6 +10,7 @@ interface ProjectProps {
   owner: string;
   status: string;
   tasks: any[];
+  deadline: string;
   teamMembers: string[];
   createdAt: string;
 }
@@ -46,6 +47,7 @@ const Projects = () => {
           owner={project.owner} 
           status={project.status} 
           tasks={project.tasks}
+          deadline={project.deadline}
           teamMembers={project.teamMembers}
           createdAt={project.createdAt} 
           />

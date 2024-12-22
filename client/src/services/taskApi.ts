@@ -54,7 +54,13 @@ export const taskApi = createApi({
         body: { status },
       }),
     }),
-
+    adjustWorkSchedule: builder.mutation({
+      query: ({ taskId, deadline, priority }) => ({
+        url: `/${taskId}/adjust`,
+        method: 'PUT',
+        body: { deadline, priority },
+      }),
+    }),
 
   }),
 });
@@ -66,5 +72,6 @@ export const {
     useAssignUsersToTaskMutation, 
     useAddIssueMutation, 
     useGetTaskIssuesQuery, 
-    useUpdateIssueMutation
+    useUpdateIssueMutation,
+    useAdjustWorkScheduleMutation
 } = taskApi;

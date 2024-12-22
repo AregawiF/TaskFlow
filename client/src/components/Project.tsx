@@ -23,11 +23,12 @@ interface ProjectProps {
     owner: string;
     status: string;
     tasks: task[];
+    deadline: string;
     teamMembers: string[];
     createdAt: string;
 }
 
-const Project: React.FC<ProjectProps> = ({_id, title, description, owner, status, tasks, teamMembers, createdAt} ) => {
+const Project: React.FC<ProjectProps> = ({_id, title, description, owner, status, tasks, deadline, teamMembers, createdAt} ) => {
   return (
     <Link to={`/project/${_id}`} className="bg-white shadow-md rounded-lg p-4 mb-4 block hover:shadow-lg transition-shadow duration-300">
 
@@ -42,8 +43,8 @@ const Project: React.FC<ProjectProps> = ({_id, title, description, owner, status
             <strong>Progress:</strong> {tasks.length > 0 ? (tasks.filter(task => task.status === "completed").length / tasks.length * 100) : 0}%
         </p>
       <p className="text-gray-500">
-        <strong>Created At:</strong>{" "}
-        {new Date(createdAt).toLocaleDateString()}
+        <strong>Deadline:</strong>{" "}
+        {new Date(deadline).toLocaleDateString()}
       </p>
     </Link>
   );

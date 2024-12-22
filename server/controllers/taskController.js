@@ -2,6 +2,7 @@ const Task = require("../models/Task");
 const Project = require("../models/Project");
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
+const nodemailer = require('nodemailer'); 
 
 const createTask = asyncHandler(async (req, res) => {
   const { title, description, projectId, assignedTo, deadline, priority } = req.body;
@@ -40,10 +41,17 @@ const createTask = asyncHandler(async (req, res) => {
 });
 
 
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Use your email service
+  auth: {
+    user: process.env.EMAIL_USER, // Your email
+    pass: process.env.EMAIL_PASS, // Your email password or app password
+  },
+});
+
 const assignUsersToTask = asyncHandler(async (req, res) => {
-  const { taskId, users } = req.body;  // Task ID and array of usernames
-  console.log("Task ID:", taskId);
-  console.log("Users:", users);
+  const { taskId, users } = req.body;
 
   // Validate input
   if (!taskId || !users || !Array.isArray(users)) {
@@ -65,31 +73,88 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
     throw new Error("One or more users not found");
   }
 
-  // Create an array of user objects with ID and username
-  const usersToAssign = foundUsers.map(user => ({
-    userId: user._id,
-    username: user.username
-  }));
-
-  // Filter out users already assigned to the task
-  const uniqueUsersToAdd = usersToAssign.filter(user => 
-    !task.assignedTo.some(assigned => assigned.userId.toString() === user.userId.toString())
-  );
-
-  if (uniqueUsersToAdd.length === 0) {
-    res.status(400);
-    throw new Error("All provided users are already assigned to this task");
-  }
-
   // Assign the users to the task
-  task.assignedTo.push(...uniqueUsersToAdd);
+  task.assignedTo.push(...foundUsers);
   await task.save();
+
+  // Send email to each assigned user
+  foundUsers.forEach(user => {
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Your email
+      to: user.email, // User's email
+      subject: 'Task Assigned to You',
+      text: `Hello ${user.username},\n\nYou have been assigned a new task: ${task.title}.\n\nDescription: ${task.description}\n\nBest regards,\nYour Team`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+  });
 
   res.status(200).json({
     message: "Users assigned to task successfully",
     task,
   });
 });
+
+
+
+
+
+// const assignUsersToTask = asyncHandler(async (req, res) => {
+//   const { taskId, users } = req.body;  // Task ID and array of usernames
+//   console.log("Task ID:", taskId);
+//   console.log("Users:", users);
+
+//   // Validate input
+//   if (!taskId || !users || !Array.isArray(users)) {
+//     res.status(400);
+//     throw new Error("Please provide a valid task ID and an array of usernames");
+//   }
+
+//   // Check if the task exists
+//   const task = await Task.findById(taskId);
+//   if (!task) {
+//     res.status(404);
+//     throw new Error("Task not found");
+//   }
+
+//   // Find users by their usernames
+//   const foundUsers = await User.find({ username: { $in: users } });
+//   if (foundUsers.length !== users.length) {
+//     res.status(404);
+//     throw new Error("One or more users not found");
+//   }
+
+//   // Create an array of user objects with ID and username
+//   const usersToAssign = foundUsers.map(user => ({
+//     userId: user._id,
+//     username: user.username
+//   }));
+
+//   // Filter out users already assigned to the task
+//   const uniqueUsersToAdd = usersToAssign.filter(user => 
+//     !task.assignedTo.some(assigned => assigned.userId.toString() === user.userId.toString())
+//   );
+
+//   if (uniqueUsersToAdd.length === 0) {
+//     res.status(400);
+//     throw new Error("All provided users are already assigned to this task");
+//   }
+
+//   // Assign the users to the task
+//   task.assignedTo.push(...uniqueUsersToAdd);
+//   await task.save();
+
+//   res.status(200).json({
+//     message: "Users assigned to task successfully",
+//     task,
+//   });
+// });
 
 
 const adjustWorkSchedule = asyncHandler(async (req, res) => {
