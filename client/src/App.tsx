@@ -67,6 +67,7 @@ const App: React.FC = () => {
             <Route path="/projects" element={<Projects />} />
             <Route path="/project/:projectId" element={<ProjectDetail />} />
             <Route path="/profile" element={<Profile />} />
+            
           </Route>
         ) : role === "member" ? (
           <Route path="/" element={<MemberLayout />}>

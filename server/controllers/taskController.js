@@ -19,15 +19,6 @@ const createTask = asyncHandler(async (req, res) => {
     throw new Error("Project not found");
   }
 
-  // Check if the users exist (if assignedTo is provided)
-  if (assignedTo && Array.isArray(assignedTo)) {
-    const users = await User.find({ '_id': { $in: assignedTo } });
-    if (users.length !== assignedTo.length) {
-      res.status(404);
-      throw new Error("One or more users not found");
-    }
-  }
-
   // Create a new task
   const task = new Task({
     title,
@@ -39,6 +30,8 @@ const createTask = asyncHandler(async (req, res) => {
   });
 
   await task.save();
+  project.tasks.push(task._id); 
+  await project.save(); 
   
   res.status(201).json({
     message: "Task created successfully",
@@ -48,12 +41,14 @@ const createTask = asyncHandler(async (req, res) => {
 
 
 const assignUsersToTask = asyncHandler(async (req, res) => {
-  const { taskId, users } = req.body;  // Task ID and array of user IDs
+  const { taskId, users } = req.body;  // Task ID and array of usernames
+  console.log("Task ID:", taskId);
+  console.log("Users:", users);
 
   // Validate input
   if (!taskId || !users || !Array.isArray(users)) {
     res.status(400);
-    throw new Error("Please provide a valid task ID and an array of user IDs");
+    throw new Error("Please provide a valid task ID and an array of usernames");
   }
 
   // Check if the task exists
@@ -63,15 +58,23 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
     throw new Error("Task not found");
   }
 
-  // Check if the users exist
-  const foundUsers = await User.find({ '_id': { $in: users } });
+  // Find users by their usernames
+  const foundUsers = await User.find({ username: { $in: users } });
   if (foundUsers.length !== users.length) {
     res.status(404);
     throw new Error("One or more users not found");
   }
 
+  // Create an array of user objects with ID and username
+  const usersToAssign = foundUsers.map(user => ({
+    userId: user._id,
+    username: user.username
+  }));
+
   // Filter out users already assigned to the task
-  const uniqueUsersToAdd = users.filter((userId) => !task.assignedTo.includes(userId));
+  const uniqueUsersToAdd = usersToAssign.filter(user => 
+    !task.assignedTo.some(assigned => assigned.userId.toString() === user.userId.toString())
+  );
 
   if (uniqueUsersToAdd.length === 0) {
     res.status(400);
@@ -79,10 +82,9 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
   }
 
   // Assign the users to the task
-  task.assignedTo.push(...uniqueUsersToAdd);  // Add users to the existing assignedTo array (if not already assigned)
-  
+  task.assignedTo.push(...uniqueUsersToAdd);
   await task.save();
-  
+
   res.status(200).json({
     message: "Users assigned to task successfully",
     task,
@@ -121,6 +123,50 @@ const adjustWorkSchedule = asyncHandler(async (req, res) => {
   });
 });
 
+const getTask = asyncHandler(async (req, res) => {
+  const { taskId } = req.params; // Get the task ID from the request parameters
+
+  // Validate input
+  if (!taskId) {
+    res.status(400);
+    throw new Error("Please provide a valid task ID");
+  }
+
+  // Check if the task exists
+  const task = await Task.findById(taskId).populate('assignedTo'); // Optionally populate assignedTo with user details
+  if (!task) {
+    res.status(404);
+    throw new Error("Task not found");
+  }
+
+  res.status(200).json(task); // Return the task details
+});
+
+const markTaskAsDone = asyncHandler(async (req, res) => {
+  const { taskId } = req.params; // Get the task ID from the request parameters
+
+  // Validate input
+  if (!taskId) {
+    res.status(400);
+    throw new Error("Please provide a valid task ID");
+  }
+
+  // Check if the task exists
+  const task = await Task.findById(taskId);
+  if (!task) {
+    res.status(404);
+    throw new Error("Task not found");
+  }
+
+  // Update the task status to 'completed'
+  task.status = "completed"; // or whatever status you want to use
+  await task.save();
+
+  res.status(200).json({
+    message: "Task marked as done successfully",
+    task,
+  });
+});
 
 
-module.exports = { createTask, assignUsersToTask, adjustWorkSchedule };
+module.exports = { createTask, assignUsersToTask, adjustWorkSchedule, getTask, markTaskAsDone };
