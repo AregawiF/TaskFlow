@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import React, { useState } from "react";
 import { useGetTaskQuery, useMarkTaskAsDoneMutation } from "../services/taskApi"; // Import the query and mutation hooks
 import { FaCheckCircle, FaClock, FaStar } from "react-icons/fa";

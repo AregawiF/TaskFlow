@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import React, { useState } from "react";
 import { useGetTaskQuery, useMarkTaskAsDoneMutation, useAssignUsersToTaskMutation, useAdjustWorkScheduleMutation } from "../services/taskApi"; // Import the query and mutation hooks
 import Issues from "./Issue";

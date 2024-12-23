@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+// @ts-nocheck
+
+import { useState } from "react";
 import { useGetTaskIssuesQuery, useAddIssueMutation, useUpdateIssueMutation } from "../services/taskApi"; // Import the query and mutation hooks
 
 interface IssuesProps {

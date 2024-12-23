@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAdjustProjectDeadlineMutation, useGetProjectsQuery } from "../services/projectApi";

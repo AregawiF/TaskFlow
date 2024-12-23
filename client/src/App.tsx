@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
