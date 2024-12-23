@@ -15,7 +15,7 @@ interface ProjectProps {
   createdAt: string;
 }
 
-const Projects = () => {
+const OwnerProjects = () => {
 
   const { data, isLoading, isError, error, refetch } = useGetProjectsQuery([]);
 
@@ -66,4 +66,4 @@ const Projects = () => {
   )
 }
 
-export default Projects
+export default OwnerProjects

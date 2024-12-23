@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Projects from './pages/owner/OwnerProjects';
+import OwnerProjects from './pages/owner/OwnerProjects';
 import OwnerProfile from './pages/owner/OwnerProfile';
 import { newtonsCradle } from 'ldrs'
 
@@ -14,6 +14,10 @@ import OwnerOverview from './pages/owner/OwnerOverview';
 import Members from './pages/owner/Members';
 import MemberOverview from './pages/member/MemberOverview';
 import ProjectDetail from './components/ProjectDetail';
+import MemberProfile from './pages/member/MemberProfile';
+import MemberResources from './pages/member/MemberResources';
+import MemberMyTasks from './pages/member/MemberMyTasks';
+import MemberNotification from './pages/member/MemberNotification';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -86,7 +90,7 @@ const App: React.FC = () => {
           <Route path="/" element={<OwnerLayout />}>
             <Route path="/dashboard" element={<OwnerOverview />} />
             <Route path="/members" element={<Members />} />
-            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects" element={<OwnerProjects />} />
             <Route path="/project/:projectId" element={<ProjectDetail />} />
             <Route path="/profile" element={<OwnerProfile />} />
             
@@ -95,10 +99,10 @@ const App: React.FC = () => {
           <Route path="/" element={<MemberLayout />}>
 
             <Route path="/dashboard" element={<MemberOverview />} />
-            <Route path="/my-tasks" element={<Projects />} />
-            <Route path="/notifications" element={<Projects />} />
-            <Route path="/resources" element={<Projects />} />
-            <Route path="/profile" element={<OwnerProfile />} />
+            <Route path="/my-tasks" element={<MemberMyTasks />} />
+            <Route path="/notifications" element={<MemberNotification />} />
+            <Route path="/resources" element={<MemberResources />} />
+            <Route path="/profile" element={<MemberProfile />} />
 
           </Route>
         ) : (

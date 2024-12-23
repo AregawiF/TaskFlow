@@ -3,6 +3,7 @@ const {
   registerUser,
   loginUser,
   getUserProfile,
+  deleteUserProfile,
 } = require("../controllers/userController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -14,5 +15,6 @@ router.post("/login", loginUser);
 
 // Private route
 router.get("/profile", protect, getUserProfile);
+router.delete("/profile", protect, deleteUserProfile);
 
 module.exports = router;
