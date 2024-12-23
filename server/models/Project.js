@@ -12,6 +12,7 @@ const ProjectSchema = new mongoose.Schema({
   deadline: { type: Date },
 });
 
+
 const Project = mongoose.model("Project", ProjectSchema);
 
 module.exports = Project;

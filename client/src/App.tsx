@@ -17,7 +17,7 @@ import ProjectDetail from './components/ProjectDetail';
 import MemberProfile from './pages/member/MemberProfile';
 import MemberResources from './pages/member/MemberResources';
 import MemberMyTasks from './pages/member/MemberMyTasks';
-import MemberNotification from './pages/member/MemberNotification';
+import Notification from './pages/Notification';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
@@ -59,7 +59,6 @@ const App: React.FC = () => {
 
 
     if (loading) {
-        // Display a loading spinner or placeholder while waiting
         return <div>Loading...</div>;
       }
 
@@ -100,7 +99,7 @@ const App: React.FC = () => {
 
             <Route path="/dashboard" element={<MemberOverview />} />
             <Route path="/my-tasks" element={<MemberMyTasks />} />
-            <Route path="/notifications" element={<MemberNotification />} />
+            <Route path="/notifications" element={<Notification />} />
             <Route path="/resources" element={<MemberResources />} />
             <Route path="/profile" element={<MemberProfile />} />
 

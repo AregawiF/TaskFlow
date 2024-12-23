@@ -4,6 +4,7 @@ import { authApi } from '../services/authApi';
 import { projectsApi } from '../services/projectApi';
 import { taskApi } from '../services/taskApi';
 import { profileApi } from '../services/profileApi';
+import { notificationApi } from '../services/notificationApi';
 
 export const store = configureStore({
   reducer: {
@@ -12,9 +13,10 @@ export const store = configureStore({
     [projectsApi.reducerPath]: projectsApi.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, projectsApi.middleware, taskApi.middleware, profileApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, projectsApi.middleware, taskApi.middleware, profileApi.middleware, notificationApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

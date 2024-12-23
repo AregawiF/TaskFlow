@@ -1,6 +1,7 @@
 const Task = require("../models/Task");
 const Project = require("../models/Project");
 const User = require("../models/User");
+const Notification = require("../models/Notification");
 const asyncHandler = require("express-async-handler");
 const nodemailer = require('nodemailer'); 
 require('dotenv').config(); // Load environment variables
@@ -100,7 +101,14 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
         console.log("Email sent:", info.response);
       }
     });
+
+    // Create a notification for the user
+    Notification.create({
+      user: user._id, // User ID from the User model
+      message: `You have been assigned a new task: ${task.title}.`,
+    });
   });
+
 
   res.status(200).json({
     message: "Users assigned to task successfully",
@@ -108,60 +116,6 @@ const assignUsersToTask = asyncHandler(async (req, res) => {
   });
 });
 
-
-
-
-
-// const assignUsersToTask = asyncHandler(async (req, res) => {
-//   const { taskId, users } = req.body;  // Task ID and array of usernames
-//   console.log("Task ID:", taskId);
-//   console.log("Users:", users);
-
-//   // Validate input
-//   if (!taskId || !users || !Array.isArray(users)) {
-//     res.status(400);
-//     throw new Error("Please provide a valid task ID and an array of usernames");
-//   }
-
-//   // Check if the task exists
-//   const task = await Task.findById(taskId);
-//   if (!task) {
-//     res.status(404);
-//     throw new Error("Task not found");
-//   }
-
-//   // Find users by their usernames
-//   const foundUsers = await User.find({ username: { $in: users } });
-//   if (foundUsers.length !== users.length) {
-//     res.status(404);
-//     throw new Error("One or more users not found");
-//   }
-
-//   // Create an array of user objects with ID and username
-//   const usersToAssign = foundUsers.map(user => ({
-//     userId: user._id,
-//     username: user.username
-//   }));
-
-//   // Filter out users already assigned to the task
-//   const uniqueUsersToAdd = usersToAssign.filter(user => 
-//     !task.assignedTo.some(assigned => assigned.userId.toString() === user.userId.toString())
-//   );
-
-//   if (uniqueUsersToAdd.length === 0) {
-//     res.status(400);
-//     throw new Error("All provided users are already assigned to this task");
-//   }
-
-//   // Assign the users to the task
-//   task.assignedTo.push(...uniqueUsersToAdd);
-//   await task.save();
-
-//   res.status(200).json({
-//     message: "Users assigned to task successfully",
-//     task,
-//   });
-// });
 
 
 const adjustWorkSchedule = asyncHandler(async (req, res) => {
@@ -243,5 +197,22 @@ const markTaskAsDone = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Get all tasks for a user
+// @route GET /api/tasks/my-tasks/:userId
+// @access Private
+const getUserTasks = asyncHandler(async (req, res) => {
+  const userId = req.params.userId; // Get the user ID from the request parameters
 
-module.exports = { createTask, assignUsersToTask, adjustWorkSchedule, getTask, markTaskAsDone };
+  // Validate input
+  if (!userId) {
+    res.status(400);
+    throw new Error("Please provide a valid user ID");
+  }
+
+  // Fetch tasks assigned to the user by checking the assignedTo array
+  const tasks = await Task.find({ 'assignedTo._id': userId }).populate('assignedTo._id'); // Use 'assignedTo._id' to query
+
+  res.status(200).json(tasks); // Return the list of tasks
+});
+
+module.exports = { createTask, assignUsersToTask, adjustWorkSchedule, getTask, markTaskAsDone, getUserTasks };

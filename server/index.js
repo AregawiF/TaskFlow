@@ -6,6 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const issueRoutes = require("./routes/issueRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 
 
@@ -27,9 +28,8 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes); // Mount project-related routes
 app.use("/api/tasks", taskRoutes); // Mount task-related routes
-
-app.use("/api/tasks", issueRoutes);
-
+app.use("/api/issues", issueRoutes);
+app.use("/api/notification", notificationRoutes);
 
 // error handling
 app.use((err, req, res, next) => {

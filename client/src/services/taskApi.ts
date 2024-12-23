@@ -62,6 +62,12 @@ export const taskApi = createApi({
       }),
     }),
 
+    getUserTasks: builder.query({
+      query: (userId) => `/my-tasks/${userId}`, 
+    }),
+
+
+
   }),
 });
 
@@ -73,5 +79,6 @@ export const {
     useAddIssueMutation, 
     useGetTaskIssuesQuery, 
     useUpdateIssueMutation,
-    useAdjustWorkScheduleMutation
+    useAdjustWorkScheduleMutation,
+    useGetUserTasksQuery,
 } = taskApi;

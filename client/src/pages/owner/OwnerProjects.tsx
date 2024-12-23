@@ -23,8 +23,9 @@ const OwnerProjects = () => {
 
 
   if (isLoading) return <p>Loading projects...</p>;
-  if (error){
-    return <p>Error fetching projects: {error.data.message}</p>;
+  if (isError) {
+    const errorMessage = 'data' in error && typeof error.data === 'object' && error.data !== null && 'message' in error.data ? (error.data as { message: string }).message : 'An error occurred';
+    return <p>Error fetching projects: {errorMessage}</p>;
   }
 
   const projects = data?.projects || [];
