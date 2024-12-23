@@ -3,6 +3,7 @@ const Project = require("../models/Project");
 const User = require("../models/User");
 const asyncHandler = require("express-async-handler");
 const nodemailer = require('nodemailer'); 
+require('dotenv').config(); // Load environment variables
 
 const createTask = asyncHandler(async (req, res) => {
   const { title, description, projectId, assignedTo, deadline, priority } = req.body;
@@ -43,10 +44,16 @@ const createTask = asyncHandler(async (req, res) => {
 
 // Configure nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // Use your email service
+  service: 'gmail', 
+  host: 'smtp.gmail.com', 
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER, // Your email
-    pass: process.env.EMAIL_PASS, // Your email password or app password
+    user: process.env.EMAIL_USER, //  email
+    pass: process.env.EMAIL_PASS, //  email password or app password
+  },
+  tls: {
+    rejectUnauthorized: false, // Ignore self-signed certificate errors
   },
 });
 

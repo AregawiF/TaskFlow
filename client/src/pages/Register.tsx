@@ -43,6 +43,7 @@ const Register: React.FC = () => {
       try {
         console.log(formdata);
         const response = await registerUser(formdata).unwrap();
+        localStorage.setItem('token', response.token);
         navigate('/dashboard');
         console.log('User registered successfully');
       } catch (err) {

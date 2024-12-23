@@ -16,7 +16,7 @@ const MemberLayout: React.FC = () => {
       {/* Member's Navbar */}
       <header className="bg-green-700 text-white py-4 px-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Member Dashboard</h1>
-        <button onClick={() => {handleLogout}} className="bg-green-800 hover:bg-green-800 text-white py-2 px-4 rounded">
+        <button onClick={handleLogout} className="bg-green-800 hover:bg-green-800 text-white py-2 px-4 rounded">
           Log Out
         </button>
       </header>

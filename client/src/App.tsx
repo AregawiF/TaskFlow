@@ -21,37 +21,42 @@ const App: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      const token = localStorage.getItem('token');
-  
-      if (!token) {
-        navigate('/login');
-      } else {
-  
-        try {
-          const decodedToken: any = jwtDecode(token); // Decode the JWT token
-          const userRole = decodedToken.payload.role; 
-          setIsAuthenticated(true); 
-          setRole(userRole); 
-        } catch (error) {
-          console.error('Invalid token or token expired', error);
-          navigate('/login'); 
-        }
-  
-      }
-    }, [navigate]);
+  const token = localStorage.getItem('token');
 
-
-    if (!isAuthenticated) {
-    return (
-      <div className="flex justify-center">
-        <l-newtons-cradle
-        size="140"
-        speed="1.4" 
-        color="black" 
-        ></l-newtons-cradle>
-      </div>
-    );
+  // Allow unauthenticated users to access login and register routes
+  const publicRoutes = ['/login', '/register'];
+  if (publicRoutes.includes(window.location.pathname)) {
+    return;
   }
+
+  if (!token) {
+    navigate('/login');
+  } else {
+    try {
+      const decodedToken: any = jwtDecode(token); // Decode the JWT token
+      const userRole = decodedToken.payload.role;
+      setIsAuthenticated(true);
+      setRole(userRole);
+    } catch (error) {
+      console.error('Invalid token or token expired', error);
+      navigate('/login');
+    }
+  }
+}, [navigate]);
+
+
+
+  //   if (!isAuthenticated) {
+  //   return (
+  //     <div className="flex justify-center">
+  //       <l-newtons-cradle
+  //       size="140"
+  //       speed="1.4" 
+  //       color="black" 
+  //       ></l-newtons-cradle>
+  //     </div>
+  //   );
+  // }
   
 
   return (
