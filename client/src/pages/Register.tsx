@@ -3,6 +3,7 @@ import React from 'react';
 import {SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegisterMutation } from '../services/authApi';
+import TaskFlowLogo from '../assets/taskflow-logo.png';
 
 interface RegisterFormInputs {
   name: string;
@@ -53,7 +54,15 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow-md rounded-md">
+    <div className='flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-200 to-blue-400 '>
+    <div className="mx-64 p-4 bg-white shadow-md rounded-md flex items-center">
+      <div>
+        <img src={TaskFlowLogo} alt="logo of taskflow" className='my-auto'/>
+      </div>
+
+
+    <div>
+
       <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <input
@@ -67,8 +76,8 @@ const Register: React.FC = () => {
         <input {...register("email", {
           required: "Email is required",
           pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-              message: "invalid email address"}
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+            message: "invalid email address"}
           })} type="text" placeholder='Enter your email' className='border-2 border-gray-400 rounded-lg p-2 ml-5 w-4/5 h-10'
         />
           {errors.email && <p className='text-red-500 ml-10 aria-live="polite text-sm'>{errors.email.message}</p>}
@@ -83,15 +92,15 @@ const Register: React.FC = () => {
         <input {...register("password", {
                 required: "Password is required",
                 minLength: {value: 6, message: "password must be at least 6 characters"}
-            })} type="password" placeholder='Password' className='border-2 border-gray-400 rounded-lg p-2 ml-5 w-4/5 h-10'
-        />
+              })} type="password" placeholder='Password' className='border-2 border-gray-400 rounded-lg p-2 ml-5 w-4/5 h-10'
+              />
         {errors.password && <p className='text-red-500 ml-10 aria-live="polite" text-sm'>{errors.password.message}</p>}
 
         <input {...register("confirmPassword", {
                 required: "Confirm your password",
                 minLength: {value: 6, message: "password must be at least 6 characters"}
-            })} type="password" placeholder='Confirm your password' className='border-2 border-gray-400 rounded-lg p-2 ml-5 w-4/5 h-10'
-        />
+              })} type="password" placeholder='Confirm your password' className='border-2 border-gray-400 rounded-lg p-2 ml-5 w-4/5 h-10'
+              />
         {errors.password && <p className='text-red-500 ml-10 aria-live="polite" text-sm'>{errors.password.message}</p>}
 
         <div className='text-center'>
@@ -101,13 +110,13 @@ const Register: React.FC = () => {
                 type="radio"
                 value="owner"
                 className="mx-2"
-            />  Business Owner
+                />  Business Owner
             <input
                 {...register("role", { required: "Please select an option" })}
                 type="radio"
                 value="member"
                 className="mx-10 mr-2"
-            />  Team Member
+                />  Team Member
             {errors.role && <p className='text-red-500 ml-7 text-sm'>{errors.role.message}</p>}
             
         </div>
@@ -116,7 +125,7 @@ const Register: React.FC = () => {
             type='submit' 
             className={`p-3 rounded-lg bg-blue-700 text-white font-semibold w-full ${isLoading ? 'bg-blue-400' : ''}`} 
             disabled={isLoading}
-        >
+            >
             {isLoading ? 'Loading...' : 'Register'}
         </button>
 
@@ -127,6 +136,8 @@ const Register: React.FC = () => {
           Login here
         </Link>
       </p>
+    </div>
+    </div>
     </div>
   );
 };

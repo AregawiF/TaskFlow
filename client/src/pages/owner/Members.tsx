@@ -2,7 +2,7 @@ import React from 'react'
 
 const Members = () => {
   return (
-    <div>Members</div>
+    <div className='text-center text-2xl'>Members page coming soon !!! 😊</div>
   )
 }
 

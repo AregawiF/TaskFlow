@@ -85,7 +85,7 @@ const Task: React.FC<TaskProps> = ({ taskId }) => {
       />
       {/* Assign User Button */}
       <button 
-        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded" 
+        className="mt-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded hover:bg-gradient-to-l transition duration-300" 
         onClick={handleAssignUsers}
       >
         Assign User

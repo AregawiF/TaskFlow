@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { useGetTaskQuery, useMarkTaskAsDoneMutation } from "../services/taskApi"; // Import the query and mutation hooks
+import { FaCheckCircle, FaClock, FaStar } from "react-icons/fa";
 
 interface TaskProps {
   taskId: string; // Accept task ID as a prop
@@ -33,13 +34,22 @@ const MemberTask: React.FC<TaskProps> = ({ taskId }) => {
     <div className="bg-white shadow-md rounded-lg p-4 mb-4">
       <h2 className="text-xl font-semibold">{task.title}</h2>
       <p className="text-gray-600">{task.description}</p>
-      <p><strong>Project ID:</strong> {task.project}</p>
       <p><strong>Assigned To:</strong> {Array.isArray(task.assignedTo) && task.assignedTo.length > 0 ? task.assignedTo.map(user => user.username).join(", ") : "Unassigned"}</p>
-      <p><strong>Status:</strong> {task.status}</p>
-      <p><strong>Priority:</strong> {task.priority}</p>
-      <p><strong>Deadline:</strong> {new Date(task.deadline).toLocaleString()}</p>
+      <div className="flex items-center mb-2">
+        <FaCheckCircle className="text-green-500 mr-1" />
+        <p className="text-gray-700"><strong>Status:</strong> {task.status}</p>
+        </div>
+        <div className="flex items-center mb-2">
+            <FaStar className="text-yellow-500 " />
+            <p className="text-lg text-gray-700  rounded">
+                <strong>Priority:</strong> {task.priority}
+            </p>
+        </div>
+      <div className="flex items-center mb-2">
+        <FaClock className="text-orange-500 mr-1" />
+        <p className="text-gray-700"><strong>Deadline:</strong> {new Date(task.deadline).toLocaleDateString()}</p>
+    </div>
       <p><strong>Progress:</strong> {task.progress}%</p>
-      <p><strong>Created At:</strong> {new Date(task.createdAt).toLocaleString()}</p>
       
       {/* Mark as Done Button */}
       <button 
