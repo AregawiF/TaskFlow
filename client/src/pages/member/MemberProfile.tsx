@@ -11,7 +11,7 @@ const mockUser = {
   createdAt: "2024-12-21T14:59:53.246Z",
 };
 
-const profile: React.FC = () => {
+const MemberProfile: React.FC = () => {
   const [bgColor, setBgColor] = useState<string>("");
 
   // Define a color palette
@@ -65,4 +65,4 @@ const profile: React.FC = () => {
   );
 };
 
-export default profile;
+export default MemberProfile;
